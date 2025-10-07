@@ -1,5 +1,6 @@
+
 import React, { useState, useCallback, useMemo } from 'react';
-import { ProjectData, DevelopmentGoal, DesignStyle, DesignPriority } from './types.ts';
+import { ProjectData, DevelopmentGoal, DesignStyle, DesignPriority, GeneratedReportData } from './types.ts';
 import { LOCATIONS, GOALS, STYLES, PRIORITIES } from './constants.ts';
 import { Header } from './components/Header.tsx';
 import { StepCard } from './components/StepCard.tsx';
@@ -9,6 +10,7 @@ import { TagSelect } from './components/TagSelect.tsx';
 import { AreaSlider } from './components/AreaSlider.tsx';
 import { GeneratingLoader } from './components/GeneratingLoader.tsx';
 import { GeneratedReport } from './components/GeneratedReport.tsx';
+import { generateProposalText, generateProposalImage } from './services/gemini.ts';
 
 const App: React.FC = () => {
   const [projectName, setProjectName] = useState('南港之心社區計畫');
@@ -25,6 +27,9 @@ const App: React.FC = () => {
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [showReport, setShowReport] = useState(false);
+  const [generatedData, setGeneratedData] = useState<GeneratedReportData | null>(null);
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handlePriorityChange = useCallback((priority: DesignPriority) => {
     setPriorities(prev => {
@@ -40,20 +45,45 @@ const App: React.FC = () => {
     });
   }, []);
 
-  const handleGenerate = () => {
+  const projectData: ProjectData = useMemo(() => ({
+    projectName,
+    location: { city, district },
+    area,
+    goal,
+    style,
+    priorities
+  }), [projectName, city, district, area, goal, style, priorities]);
+
+  const handleGenerate = async () => {
     setIsGenerating(true);
     setShowReport(false);
+    setError(null);
 
-    setTimeout(() => {
-      setIsGenerating(false);
-      setShowReport(true);
-      window.scrollTo(0, 0);
-    }, 6000);
+    try {
+        const reportTextData = await generateProposalText(projectData);
+        setGeneratedData(reportTextData);
+        
+        if (reportTextData?.solution?.imagePrompt) {
+            const imageUrl = await generateProposalImage(reportTextData.solution.imagePrompt);
+            setGeneratedImage(imageUrl);
+        }
+
+        setShowReport(true);
+        window.scrollTo(0, 0);
+    } catch (e) {
+        console.error(e);
+        setError('生成建議書時發生錯誤，請稍後再試。');
+    } finally {
+        setIsGenerating(false);
+    }
   };
 
   const handleReset = () => {
     setShowReport(false);
     setIsGenerating(false);
+    setGeneratedData(null);
+    setGeneratedImage(null);
+    setError(null);
     setProjectName('南港之心社區計畫');
     setCity('台北市');
     setDistrict('信義區');
@@ -69,17 +99,8 @@ const App: React.FC = () => {
   };
 
   const districts = useMemo(() => LOCATIONS[city as keyof typeof LOCATIONS] || [], [city]);
-
-  const projectData: ProjectData = {
-    projectName,
-    location: { city, district },
-    area,
-    goal,
-    style,
-    priorities
-  };
   
-  const isFormValid = projectName.trim() !== '' && priorities.length > 0;
+  const isFormValid = projectName.trim() !== '' && priorities.length === 3;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
@@ -87,8 +108,8 @@ const App: React.FC = () => {
         <Header />
         <main className="flex-1 p-4 sm:p-6 md:p-10">
           <div className="max-w-4xl mx-auto">
-            {showReport ? (
-              <GeneratedReport data={projectData} onReset={handleReset} />
+            {showReport && generatedData ? (
+              <GeneratedReport data={projectData} report={generatedData} image={generatedImage} onReset={handleReset} />
             ) : (
               <>
                 <div className="space-y-12">
@@ -159,13 +180,17 @@ const App: React.FC = () => {
                     {isGenerating ? (
                       <GeneratingLoader />
                     ) : (
-                      <button
-                        onClick={handleGenerate}
-                        disabled={!isFormValid}
-                        className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold text-xl py-4 px-12 rounded-full shadow-lg shadow-indigo-500/30 transform hover:scale-105 transition-all duration-300 ease-in-out"
-                      >
-                        生成我的設計建議書
-                      </button>
+                      <>
+                        <button
+                          onClick={handleGenerate}
+                          disabled={!isFormValid}
+                          className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold text-xl py-4 px-12 rounded-full shadow-lg shadow-indigo-500/30 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                        >
+                          生成我的設計建議書
+                        </button>
+                        {error && <p className="text-red-500 mt-4">{error}</p>}
+                        {!isFormValid && priorities.length !== 3 && <p className="text-slate-500 mt-2">請選擇 3 個設計價值以繼續。</p>}
+                      </>
                     )}
                   </div>
                 </div>

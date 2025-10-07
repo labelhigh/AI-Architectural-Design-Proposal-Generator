@@ -34,3 +34,19 @@ export interface ProjectData {
   style: DesignStyle;
   priorities: DesignPriority[];
 }
+
+export interface GeneratedReportData {
+  overview: string;
+  analysis: {
+    sunlightAndWind: string;
+    accessibility: string;
+    surroundings: string;
+  };
+  solution: {
+    title: string;
+    description: string;
+    imagePrompt: string;
+  };
+  keyFeatures: string[];
+  conclusion: string;
+}
