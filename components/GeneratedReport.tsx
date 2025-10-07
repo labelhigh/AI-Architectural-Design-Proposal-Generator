@@ -6,7 +6,6 @@ interface GeneratedReportProps {
   data: ProjectData;
   report: GeneratedReportData;
   image: string | null;
-  onReset: () => void;
 }
 
 const ReportSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -18,7 +17,7 @@ const ReportSection: React.FC<{ title: string; children: React.ReactNode }> = ({
   </div>
 );
 
-export const GeneratedReport: React.FC<GeneratedReportProps> = ({ data, report, image, onReset }) => {
+export const GeneratedReport: React.FC<GeneratedReportProps> = ({ data, report, image }) => {
   return (
     <div className="animate-fade-in">
       <div className="text-left mb-12">
@@ -63,15 +62,6 @@ export const GeneratedReport: React.FC<GeneratedReportProps> = ({ data, report, 
       <ReportSection title="第五章：結論">
         <p>{report.conclusion}</p>
       </ReportSection>
-      
-      <div className="text-center mt-12">
-        <button 
-          onClick={onReset}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-3 px-10 rounded-full shadow-lg shadow-indigo-500/30 transform hover:scale-105 transition-all duration-300 ease-in-out"
-        >
-          產生新的建議書
-        </button>
-      </div>
     </div>
   );
 };
