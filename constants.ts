@@ -1,4 +1,4 @@
-import { DevelopmentGoal, DesignStyle, DesignPriority } from './types';
+import { DevelopmentGoal, DesignStyle, DesignPriority } from './types.ts';
 
 export const LOCATIONS = {
   '台北市': ['信義區', '大安區', '中山區', '松山區', '中正區'],

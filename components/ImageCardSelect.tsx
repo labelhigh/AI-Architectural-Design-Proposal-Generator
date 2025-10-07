@@ -1,5 +1,5 @@
 import React from 'react';
-import { DesignStyle } from '../types';
+import { DesignStyle } from '../types.ts';
 
 interface ImageCardSelectProps {
   options: { value: DesignStyle; image: string }[];

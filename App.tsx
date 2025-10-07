@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { ProjectData, DevelopmentGoal, DesignStyle, DesignPriority } from './types';
-import { LOCATIONS, GOALS, STYLES, PRIORITIES } from './constants';
-import { Header } from './components/Header';
-import { StepCard } from './components/StepCard';
-import { IconCardSelect } from './components/IconCardSelect';
-import { ImageCardSelect } from './components/ImageCardSelect';
-import { TagSelect } from './components/TagSelect';
-import { AreaSlider } from './components/AreaSlider';
-import { GeneratingLoader } from './components/GeneratingLoader';
-import { GeneratedReport } from './components/GeneratedReport';
+import { ProjectData, DevelopmentGoal, DesignStyle, DesignPriority } from './types.ts';
+import { LOCATIONS, GOALS, STYLES, PRIORITIES } from './constants.ts';
+import { Header } from './components/Header.tsx';
+import { StepCard } from './components/StepCard.tsx';
+import { IconCardSelect } from './components/IconCardSelect.tsx';
+import { ImageCardSelect } from './components/ImageCardSelect.tsx';
+import { TagSelect } from './components/TagSelect.tsx';
+import { AreaSlider } from './components/AreaSlider.tsx';
+import { GeneratingLoader } from './components/GeneratingLoader.tsx';
+import { GeneratedReport } from './components/GeneratedReport.tsx';
 
 const App: React.FC = () => {
   const [projectName, setProjectName] = useState('南港之心社區計畫');

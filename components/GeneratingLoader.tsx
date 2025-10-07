@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GENERATING_MESSAGES } from '../constants';
+import { GENERATING_MESSAGES } from '../constants.ts';
 
 export const GeneratingLoader: React.FC = () => {
   const [messageIndex, setMessageIndex] = useState(0);

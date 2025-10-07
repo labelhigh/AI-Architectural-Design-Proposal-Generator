@@ -1,5 +1,5 @@
 import React from 'react';
-import { DesignPriority } from '../types';
+import { DesignPriority } from '../types.ts';
 
 interface TagSelectProps {
   options: DesignPriority[];

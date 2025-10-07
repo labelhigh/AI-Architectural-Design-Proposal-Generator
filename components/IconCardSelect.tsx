@@ -1,5 +1,5 @@
 import React from 'react';
-import { DevelopmentGoal } from '../types';
+import { DevelopmentGoal } from '../types.ts';
 
 interface IconCardSelectProps {
   options: { value: DevelopmentGoal; icon: string }[];

@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProjectData, DevelopmentGoal, DesignStyle, DesignPriority } from '../types';
-import { FEATURE_DATABASE } from '../constants';
+import { ProjectData, DevelopmentGoal, DesignStyle, DesignPriority } from '../types.ts';
+import { FEATURE_DATABASE } from '../constants.ts';
 
 interface GeneratedReportProps {
   data: ProjectData;
