@@ -1,0 +1,5 @@
+{
+  "name": "AI Architectural Design Proposal Generator",
+  "description": "A single-page application that guides users through a four-step process to generate a simulated, professional architectural design proposal based on their selections for project basics, core goals, and design styles.",
+  "requestFramePermissions": []
+}
